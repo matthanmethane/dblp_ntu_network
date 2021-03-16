@@ -12,19 +12,19 @@ class Faculty:
         self.gender = gender
         self.management = management
         self.area = area
+        
     def __str__(self) :
         return(f"{self.name}:{self.pid}")
+
     def __repr__(self) :
         return(f"{self.name},{self.pid},{self.position},{self.gender},{self.management},{self.area}")
+
     def get_name_with_pid(self,pid):
         if(self.pid == pid):
             return self.name
         else:
             return None
             
-
-
-
 #Retrieve link for individual's XML information
 def get_xml_link():
     data = pd.read_excel('Faculty.xlsx')
