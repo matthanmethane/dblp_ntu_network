@@ -1,5 +1,5 @@
 import pandas as pd
-from faculty import get_xml_link,load_faculty_xml,Faculty
+from faculty import Faculty, get_xml_link, load_faculty_xml
 from bs4 import BeautifulSoup
 from math import log
 import lxml
@@ -18,10 +18,58 @@ def find_name_with_pid(pid):
         faculty = Faculty(df_line["Faculty"],pid_list_rstrip[idx],df_line["Position"],df_line["Gender"],df_line["Management"],df_line["Area"])
         faculty_list.append(faculty)
     for faculty in faculty_list:
-        print(faculty)
+        # print(faculty)
         if(faculty.pid == pid):
             return faculty.name
 
+# Find "Position" (rank) using pid
+def find_pos_with_pid(pid):
+    pos_list = []
+    data = pd.read_excel('Faculty.xlsx')
+    df =  df = pd.DataFrame(data, columns=["Faculty","Position","Gender","Management","Area"])
+    file = open("pid.txt","r")
+    pid_list = file.readlines()
+    pid_list_rstrip = [pid.replace("_",'/').rstrip() for pid in pid_list]
+    for idx, df_line in df.iterrows():
+        pos = Faculty(df_line["Position"],pid_list_rstrip[idx],df_line["Faculty"],df_line["Gender"],df_line["Management"],df_line["Area"])
+        pos_list.append(pos)
+    for pos in pos_list:
+        #print(pos)
+        if(pos.pid == pid):
+            return pos.name
+
+# Find "Management" (or not) using pid
+def find_man_with_pid(pid):
+    man_list = []
+    data = pd.read_excel('Faculty.xlsx')
+    df =  df = pd.DataFrame(data, columns=["Faculty","Position","Gender","Management","Area"])
+    file = open("pid.txt","r")
+    pid_list = file.readlines()
+    pid_list_rstrip = [pid.replace("_",'/').rstrip() for pid in pid_list]
+    for idx, df_line in df.iterrows():
+        man = Faculty(df_line["Management"],pid_list_rstrip[idx],df_line["Faculty"],df_line["Position"],df_line["Gender"],df_line["Area"])
+        man_list.append(man)
+    for man in man_list:
+        # print(man)
+        if(man.pid == pid):
+            return man.name
+
+# Find "Area" using pid
+def find_area_with_pid(pid):
+    area_list = []
+    data = pd.read_excel('Faculty.xlsx')
+    df =  df = pd.DataFrame(data, columns=["Faculty","Position","Gender","Management","Area"])
+    file = open("pid.txt","r")
+    pid_list = file.readlines()
+    pid_list_rstrip = [pid.replace("_",'/').rstrip() for pid in pid_list]
+    for idx, df_line in df.iterrows():
+        area = Faculty(df_line["Area"],pid_list_rstrip[idx],df_line["Faculty"],df_line["Position"],df_line["Gender"],df_line["Management"])
+        area_list.append(area)
+    for area in area_list:
+        # print(area)
+        if(area.pid == pid):
+            return area.name
+            
 def get_coworker_dict():
     faculty_list = []
     data = pd.read_excel('Faculty.xlsx')
@@ -95,10 +143,12 @@ def degree_histogram_loglog(G):
 
     plt.show()
 
-
-
 node_dict = get_coworker_dict()
 
 G = nx.Graph(node_dict)
-nx.draw(G)
+d = dict(G.degree)
+nx.draw(G, nodelist=d.keys(), node_size=[(v+1) * 100 for v in d.values()])
+
+nx.write_edgelist(G, "edge_list.txt", delimiter=' ', data=False) # Generate edge_list.txt
+
 plt.show()
