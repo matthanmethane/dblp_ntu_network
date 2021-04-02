@@ -146,9 +146,9 @@ def degree_histogram_loglog(G):
 node_dict = get_coworker_dict()
 
 G = nx.Graph(node_dict)
-d = dict(G.degree)
-nx.draw(G, nodelist=d.keys(), node_size=[(v+1) * 100 for v in d.values()])
+# d = dict(G.degree)
+# nx.draw(G, nodelist=d.keys(), node_size=[(v+1) * 100 for v in d.values()])
 
 nx.write_edgelist(G, "edge_list.txt", delimiter=' ', data=False) # Generate edge_list.txt
 
-plt.show()
+# plt.show()

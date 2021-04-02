@@ -1,4 +1,4 @@
-from preprocessing import find_pos_with_pid, find_man_with_pid, find_area_with_pid
+from preprocessing import find_pos_with_pid, find_man_with_pid, find_area_with_pid, find_name_with_pid
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -26,13 +26,14 @@ def rank_collab():
             # new edge. add with weight = 1
             G.add_edge(n1, n2, weight=1)
 
+    # Plot Heatmap
     nodes = G.nodes()
-
     A = nx.to_numpy_array(G, nodelist=nodes)
     sns.heatmap(A, annot=True, xticklabels=nodes, yticklabels=nodes,cmap="Blues")
     plt.show()
     plt.savefig("rank_collab_heatmap.png")
     
+    # Plot Network Graph
     pos = nx.spring_layout(G, seed=7)
     labels = nx.get_edge_attributes(G,'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
@@ -58,8 +59,8 @@ def management_collab():
             # new edge. add with weight = 1
             G.add_edge(n1, n2, weight=1)
 
+    # Plot Network Graph
     pos = nx.spring_layout(G, seed=7)
-
     labels = nx.get_edge_attributes(G,'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
     nx.draw(G, pos, with_labels=True)
@@ -83,18 +84,16 @@ def area_collab():
         else:
             # new edge. add with weight = 1
             G.add_edge(n1, n2, weight=1)
-    
-    for node in G.nodes():
-        print (node, G.degree(node))
 
+    # Plot Heatmap
     degrees = G.degree()
     nodes = G.nodes()
-
     A = nx.to_numpy_array(G, nodelist=nodes)
     sns.heatmap(A, annot=True, xticklabels=nodes, yticklabels=nodes,cmap="Blues")
     plt.show()
     plt.savefig("area_collab_heatmap.png")
 
+    # Plot Network Graph
     pos = nx.spring_layout(G, seed=7)
     labels = nx.get_edge_attributes(G,'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
@@ -103,8 +102,8 @@ def area_collab():
     sm = plt.cm.ScalarMappable(cmap=plt.cm.Blues, norm=plt.Normalize(vmin=4, vmax=13))
     plt.colorbar(sm)
     plt.show()
-    plt.savefig("area_collab_nwGraph.png")
+    # plt.savefig("area_collab_nwGraph.png")
 
-rank_collab()
-management_collab()
-area_collab()
+# rank_collab()
+# management_collab()
+# area_collab()
