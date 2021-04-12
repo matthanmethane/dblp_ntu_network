@@ -119,6 +119,28 @@ result_df = pd.DataFrame.from_dict(result_dict)
 #print(result_df)
 #result_df.to_csv('result_yearly.csv', index=False)
 
+                    
+#create columns showing difference by year (current_year[data]-last_year[data])        
+df=result_df
+N=1
+shift_range = N+1
+merging_keys = ['Year']
+lag_cols = ['nodes','edges','average_degree','average_clustering']
+for shift in range(1,shift_range):
+    df_shift = df[merging_keys + lag_cols].copy()
+    
+    # E.g. Year of 2000 becomes 2001, for shift = 1.
+    # So when this is merged with Year of 2001 in df, this will represent lag of 2001.
+    df_shift['Year'] = df_shift['Year'] + shift
+    foo = lambda x: '{}_lag_{}'.format(x, shift) if x in lag_cols else x
+    df_shift = df_shift.rename(columns=foo)
+    df = pd.merge(df, df_shift, on=merging_keys, how='left') #.fillna(0)
+    
+    bar = lambda x: '{}_diff_{}'.format(x, shift) if x in lag_cols else x
+    for i in lag_cols:
+        df[bar(i)]=df[i]-df[foo(i)]
+        df.drop(foo(i), axis=1, inplace=True)
+del df_shift
 
-
+#df.head()
     
