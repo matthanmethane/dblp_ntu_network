@@ -58,14 +58,14 @@ def get_properties(G):
         diameter=nx.diameter(G)
         #print(diameter)
     except (nx.exception.NetworkXError):
-        diameter = "NA"
+        diameter = "NaN"
         #print("The graph is not connected")
     #print("average distance: <d> = ", end="")
     try: 
         average_distance = nx.average_shortest_path_length(G)
         #print(average_distance)
     except (nx.exception.NetworkXError):
-        average_distance = "NA"
+        average_distance = "NaN"
         #print("The graph is not connected")
 
         
