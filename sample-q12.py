@@ -105,17 +105,21 @@ get_properties(G)
 import time
 import contextlib
 
-with contextlib.redirect_stdout(None):
-    result_dict = {"Year":[],"nodes":[],"edges":[],"average_degree":[],"average_clustering":[],"diameter":[],"average_distance":[],"highest_degree_centrality_pid":[],"highest_degree_centrality_value":[],"highest_eigen_centrality_pid":[],"highest_eigen_centrality_value":[],"highest_closeness_centrality_pid":[],"highest_closeness_centrality_value":[],"highest_betweenness_centrality_pid":[],"highest_betweenness_centrality_value":[]}
-    dict_keys=["Year","nodes","edges","average_degree","average_clustering","diameter","average_distance","highest_degree_centrality_pid","highest_degree_centrality_value","highest_eigen_centrality_pid","highest_eigen_centrality_value","highest_closeness_centrality_pid","highest_closeness_centrality_value","highest_betweenness_centrality_pid","highest_betweenness_centrality_value"]
-    for i in range(int(time.strftime("%Y")),2000-1,-1):
-        G = get_coworker_graph(nodes, year = i, mode = "giant")
-        result = get_properties(G)
-        result.insert(0,i) 
-        for i in range(len(result)):
-            result_dict[dict_keys[i]].append(result[i])
+#return properties dataframe
+def get_properties_yearly(nodes,year=2000):
+    with contextlib.redirect_stdout(None):
+        result_dict = {"Year":[],"nodes":[],"edges":[],"average_degree":[],"average_clustering":[],"diameter":[],"average_distance":[],"highest_degree_centrality_pid":[],"highest_degree_centrality_value":[],"highest_eigen_centrality_pid":[],"highest_eigen_centrality_value":[],"highest_closeness_centrality_pid":[],"highest_closeness_centrality_value":[],"highest_betweenness_centrality_pid":[],"highest_betweenness_centrality_value":[]}
+        dict_keys=["Year","nodes","edges","average_degree","average_clustering","diameter","average_distance","highest_degree_centrality_pid","highest_degree_centrality_value","highest_eigen_centrality_pid","highest_eigen_centrality_value","highest_closeness_centrality_pid","highest_closeness_centrality_value","highest_betweenness_centrality_pid","highest_betweenness_centrality_value"]
+        for i in range(int(time.strftime("%Y")),year-1,-1):
+            G = get_coworker_graph(nodes, year = i, mode = "giant")
+            result = get_properties(G)
+            result.insert(0,i) 
+            for i in range(len(result)):
+                result_dict[dict_keys[i]].append(result[i])
 
-result_df = pd.DataFrame.from_dict(result_dict)
+    result_df = pd.DataFrame.from_dict(result_dict)
+    return result_df
+result_df=get_properties_yearly(nodes,year=2000)
 #print(result_df)
 #result_df.to_csv('result_yearly.csv', index=False)
 
@@ -140,6 +144,6 @@ def yearly_diff(df,N=1)
             df[bar(i)]=df[i]-df[foo(i)]
             df.drop(foo(i), axis=1, inplace=True)
     del df_shift
-df = yearly_diff(df,N=1)
+df = yearly_diff(result_df,N=1)
 #df.head()
     
