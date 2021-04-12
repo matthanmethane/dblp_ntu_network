@@ -102,25 +102,22 @@ G = get_coworker_graph(nodes, year = 2019, mode = "connected", weighted = False)
 nx.draw(G)
 plt.show()
 get_properties(G)
-
-'''
-##uncomment to write yearly output to result_year.csv in current directory
-import csv
 import time
 import contextlib
 
-file = open('result_yearly.csv', 'w+', newline ='')
-with file:
-    write = csv.writer(file)
-    write.writerows([["Year","nodes","edges","average_degree","average_clustering","diameter","average_distance","highest_degree_centrality_pid","highest_degree_centrality_value","highest_eigen_centrality_pid","highest_eigen_centrality_value","highest_closeness_centrality_pid","highest_closeness_centrality_value","highest_betweenness_centrality_pid","highest_betweenness_centrality_value"]])
-    with contextlib.redirect_stdout(None):
-        for i in range(int(time.strftime("%Y")),1999,-1):
-            G = get_coworker_graph(nodes, year = i, mode = "connected")
-            result = get_properties(G)
-            result.insert(0,i) 
-            write.writerows([result])
-print("result is written to file")
-'''
+with contextlib.redirect_stdout(None):
+    result_dict = {"Year":[],"nodes":[],"edges":[],"average_degree":[],"average_clustering":[],"diameter":[],"average_distance":[],"highest_degree_centrality_pid":[],"highest_degree_centrality_value":[],"highest_eigen_centrality_pid":[],"highest_eigen_centrality_value":[],"highest_closeness_centrality_pid":[],"highest_closeness_centrality_value":[],"highest_betweenness_centrality_pid":[],"highest_betweenness_centrality_value":[]}
+    dict_keys=["Year","nodes","edges","average_degree","average_clustering","diameter","average_distance","highest_degree_centrality_pid","highest_degree_centrality_value","highest_eigen_centrality_pid","highest_eigen_centrality_value","highest_closeness_centrality_pid","highest_closeness_centrality_value","highest_betweenness_centrality_pid","highest_betweenness_centrality_value"]
+    for i in range(int(time.strftime("%Y")),2000-1,-1):
+        G = get_coworker_graph(nodes, year = i, mode = "giant")
+        result = get_properties(G)
+        result.insert(0,i) 
+        for i in range(len(result)):
+            result_dict[dict_keys[i]].append(result[i])
+
+result_df = pd.DataFrame.from_dict(result_dict)
+#print(result_df)
+#result_df.to_csv('result_yearly.csv', index=False)
 
 
 
