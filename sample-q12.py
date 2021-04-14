@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import networkx as nx
 import matplotlib.pyplot as plt
-
+import pandas as pd
 
 file = open("pid.txt","r")
 pid_list = file.readlines()
@@ -125,7 +125,7 @@ result_df=get_properties_yearly(nodes,year=2000)
 
                     
 #create columns showing difference by year (current_year[data]-last_year[data])
-def yearly_diff(df,N=1)
+def yearly_diff(df,N=1):
     shift_range = N+1
     merging_keys = ['Year']
     lag_cols = ['nodes','edges','average_degree','average_clustering']
@@ -137,13 +137,16 @@ def yearly_diff(df,N=1)
         df_shift['Year'] = df_shift['Year'] + shift
         foo = lambda x: '{}_lag_{}'.format(x, shift) if x in lag_cols else x
         df_shift = df_shift.rename(columns=foo)
-        df = pd.merge(df, df_shift, on=merging_keys, how='left') #.fillna(0)
+        df = pd.merge(df, df_shift, on=merging_keys, how='left')
 
         bar = lambda x: '{}_diff_{}'.format(x, shift) if x in lag_cols else x
         for i in lag_cols:
             df[bar(i)]=df[i]-df[foo(i)]
             df.drop(foo(i), axis=1, inplace=True)
+        df = df.astype({bar('nodes'):pd.Int64Dtype()})
+        df = df.astype({bar('edges'):pd.Int64Dtype()})
     del df_shift
+    return df
 df = yearly_diff(result_df,N=1)
 #df.head()
     
