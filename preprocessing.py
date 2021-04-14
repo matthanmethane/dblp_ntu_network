@@ -149,6 +149,13 @@ G = nx.Graph(node_dict)
 # d = dict(G.degree)
 # nx.draw(G, nodelist=d.keys(), node_size=[(v+1) * 100 for v in d.values()])
 
-nx.write_edgelist(G, "edge_list.txt", delimiter=' ', data=False) # Generate edge_list.txt
+# nx.write_edgelist(G, "edge_list.txt", delimiter=' ', data=False) # Generate edge_list.txt
+
+# Generate edge_list from year 2000 to 2021
+import time
+
+for i in range(int(time.strftime("%Y")),1999,-1):
+    G = get_coworker_graph(nodes, year = i, mode = "connected")
+    nx.write_edgelist(G, str(i) + "_edge_list.txt", delimiter=' ', data=False) # Generate edge_list.txt (yearly)
 
 # plt.show()
