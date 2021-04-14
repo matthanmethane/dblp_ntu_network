@@ -10,20 +10,20 @@ fig_count = 0
 num_collab = False
 rank_collab = False
 man_collab = False
-area_collab = True
+area_collab = False
 
 
 fig, axes = plt.subplots(5, 5, figsize=(20, 20))
 ax = axes.flatten()
 
 for i in range(int(time.strftime("%Y")),1999,-1):
-# for i in range(2000,int(time.strftime("%Y")),1):
     file = open(f'edge_lists/{str(i)+"_edge_list"}.txt','r')
     G = str(i)
     # print(G)
     G = nx.Graph()
     for line in file:
         a, b = line.split()
+        # change faculty member name to track 
         if (find_name_with_pid(a) or find_name_with_pid(b)) == "Ong Yew Soon":
             # print(find_name_with_pid(a))
 
