@@ -195,7 +195,17 @@ def show_new_members(G):
         for i in LL:
             if str(row[1]) == str(i[0]):
                 row[1] = i[1]
-    return df_edge
+    for index, row in df_edge.iterrows():
+        for i in dictOfField:
+            for g in dictOfField[i]:
+          
+                if str(row[0]) == str(g):
+                
+                    row[0] = str(i)
+            
+    df_edges = df_edge.rename(columns={'source': 'Department','target':'Name'})
+    
+    return df_edges
 
 
 
